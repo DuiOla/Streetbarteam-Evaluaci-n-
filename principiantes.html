@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Tutoriales para principiantes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        /* Estilos generales */
         body {
             background-color: #6CB5BB;
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
             text-align: center;
             color: white;
+            word-spacing: 2px;
+            white-space: normal;
         }
 
         .container {
@@ -20,20 +22,21 @@
             padding: 20px;
         }
 
-        /* Estilo para el logo con enlace */
         .logo {
             display: block;
             margin: 20px auto;
-            width: 120px;
-            height: auto;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #fff;
             transition: transform 0.3s ease-in-out;
+            vertical-align: middle;
         }
 
         .logo:hover {
             transform: scale(1.1);
         }
 
-        /* Estilo para el título principal */
         h1 {
             font-size: 2.5rem;
             background-color: #02577A;
@@ -41,25 +44,34 @@
             border-radius: 10px;
             display: inline-block;
             margin-bottom: 20px;
+            font-variant: small-caps;
+            letter-spacing: 1px;
         }
 
-        /* Sección de texto */
-        p {
-            font-size: 1.2rem;
-            line-height: 1.5;
-            max-width: 800px;
-            margin: auto;
-            margin-bottom: 20px;
+        h1::first-letter {
+            font-size: 3.5rem;
+            color: #FFD700;
+            font-weight: bold;
         }
 
-        /* Subtítulos */
         h2 {
             font-size: 2rem;
             color: #FFD700;
             margin-top: 30px;
+            text-align: center;
+            text-transform: uppercase;
         }
 
-        /* Videos */
+        p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: auto;
+            margin-bottom: 20px;
+            text-indent: 20px;
+            text-align: justify;
+        }
+
         video {
             display: block;
             margin: 20px auto;
@@ -67,13 +79,49 @@
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
             width: 60%;
         }
+
+        a {
+            text-decoration: none;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        a:link {
+            color: #FFD700;
+        }
+
+        a:visited {
+            color: #FFA500;
+        }
+
+        a:hover {
+            color: #FF4500;
+        }
+
+        a:active {
+            color: #FF0000;
+        }
+
+        .social-icon {
+            background-image: url('https://cdn-icons-png.flaticon.com/512/2111/2111463.png');
+            background-repeat: no-repeat;
+            background-size: 20px 20px;
+            padding-left: 25px;
+        }
+
+        table {
+            width: 100%;
+            border-spacing: 10px;
+            border-collapse: separate;
+            empty-cells: hide;
+            caption-side: bottom;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
 
-   
     <a href="index.html">
         <img class="logo" src="chango.png" alt="Logo">
     </a>
@@ -86,28 +134,32 @@
     <p>Fortalecen principalmente el pecho, pero también involucran los hombros y tríceps. Son fundamentales para mejorar la estabilidad del core.</p>
     <video src="push ups.mp4" controls></video>
 
-	<br>
-	<h2>Dominadas asistidas  (Assisted pull-ups):</h2>
-    <p>Para qué sirve: Ideales para empezar a fortalecer la espalda (especialmente los dorsales) y los bíceps. Al utilizar bandas elásticas o asistencia, facilitas el movimiento, permitiendo progresar gradualmente en fuerza y técnica.</p>
-	<video src="Assisted Pull Up.mp4" width="384" height="288" controls></video>
-	
-	<br>
-	<h2>Fondos en banco (Bench dips):</h2>
-    <p>Para qué sirve: Se enfocan en trabajar los tríceps, además de involucrar los hombros y una parte del pecho. Este ejercicio es muy útil para mejorar la fuerza en los brazos, necesaria para otros movimientos más avanzados.</p>
-	<video src="Bench Dips.mp4" width="384" height="288" controls></video>
-	
-	<br>
-	<h2>Plancha (Plank):</h2>
-    <p>Para qué sirve: Es un ejercicio isométrico que fortalece el core, es decir, los músculos abdominales y lumbares. Una buena estabilidad central es esencial para casi todos los ejercicios en calistenia y para prevenir lesiones.</p>
-	<video src="Plank.mp4" width="384" height="288" controls></video>
+    <h2>Sentadillas (Squats)</h2>
+    <p>Trabajan los músculos de las piernas, especialmente los cuádriceps, isquiotibiales y glúteos.</p>
+    <video src="sentadillas.mp4" width="384" height="288" controls></video>
 
-	<br>
-	<h2>Superman:</h2>
-    <p>Para qué sirve: Se centra en la espalda baja, los glúteos y los hombros. Este ejercicio ayuda a mejorar la postura y a fortalecer los músculos estabilizadores que son clave para mantener una buena alineación corporal durante otros ejercicios.</p>
-	<video src="Ejercicio De Supermán.mp4" width="384" height="288" controls></video>
-	
+    <h2>Dominadas asistidas (Assisted pull-ups)</h2>
+    <p>Ideales para empezar a fortalecer la espalda (especialmente los dorsales) y los bíceps. Al utilizar bandas elásticas o asistencia, facilitas el movimiento, permitiendo progresar gradualmente en fuerza y técnica.</p>
+    <video src="Assisted Pull Up.mp4" width="384" height="288" controls></video>
+
+    <h2>Fondos en banco (Bench dips)</h2>
+    <p>Se enfocan en trabajar los tríceps, además de involucrar los hombros y una parte del pecho.</p>
+    <video src="Bench Dips.mp4" width="384" height="288" controls></video>
+
+    <h2>Plancha (Plank)</h2>
+    <p>Ejercicio isométrico que fortalece el core, es decir, los músculos abdominales y lumbares.</p>
+    <video src="Plank.mp4" width="384" height="288" controls></video>
+
+    <h2>Puente de glúteos (Glute bridge)</h2>
+    <p>Fortalece los glúteos y la zona lumbar. Mejora la estabilidad de la pelvis y contribuye a una mejor postura.</p>
+    <video src="The Glute bridge.mp4" width="384" height="288" controls></video>
+
+    <h2>Superman</h2>
+    <p>Se centra en la espalda baja, los glúteos y los hombros. Ayuda a mejorar la postura y a fortalecer los músculos estabilizadores.</p>
+    <video src="Ejercicio De Supermán.mp4" width="384" height="288" controls></video>
+
+    
 </div>
 
 </body>
 </html>
-
