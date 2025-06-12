@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>StreetBarTeam</title>
-
     <style>
         body {
             background-color: #19CAE6;
@@ -15,13 +14,11 @@
             word-spacing: 2px;
             white-space: normal;
         }
-
         .container {
             width: 80%;
             margin: auto;
             padding: 20px;
         }
-
         .titulo-principal {
             font-size: 3rem;
             background-color: #0174BE;
@@ -29,7 +26,6 @@
             border-radius: 10px;
             display: inline-block;
         }
-
         .imagen-perfil {
             display: block;
             margin: 20px auto;
@@ -38,7 +34,6 @@
             border-radius: 50%;
             border: 3px solid #fff;
         }
-
         .descripcion {
             font-size: 1.2rem;
             margin-bottom: 20px;
@@ -47,14 +42,12 @@
             text-indent: 20px;
             text-align: justify;
         }
-
         .descripcion::first-letter {
             font-size: 2rem;
             font-weight: bold;
             color: #FFEB3B;
             vertical-align: top;
         }
-
         table {
             width: 100%;
             border-collapse: separate;
@@ -66,31 +59,26 @@
             empty-cells: show;
             caption-side: top;
         }
-
         caption {
             font-size: 1.5rem;
             font-weight: bold;
             margin-bottom: 10px;
             color: #0174BE;
         }
-
         th, td {
             border: 1px solid #3986FA;
             padding: 15px;
             text-align: center;
             vertical-align: middle;
         }
-
         th {
             background-color: #3986FA;
             color: #fff;
             font-size: 1.2rem;
         }
-
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
-
         a {
             text-decoration: none;
             font-weight: bold;
@@ -99,23 +87,18 @@
             padding-left: 20px;
             color: #0174BE;
         }
-
         a:link {
             color: #0174BE;
         }
-
         a:visited {
             color: #4B0082;
         }
-
         a:hover {
             color: #FF5733;
         }
-
         a:active {
             color: #FFD700;
         }
-
         .titulo-secundario {
             font-size: 2rem;
             color: #fff;
@@ -125,7 +108,6 @@
             display: inline-block;
             margin-top: 30px;
         }
-
         .mapa {
             width: 100%;
             height: 400px;
@@ -133,28 +115,23 @@
             border-radius: 10px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
         }
-
         form {
             text-align: center;
             margin-top: 20px;
         }
-
         form div {
             margin-bottom: 15px;
         }
-
         input[type="text"] {
             padding: 5px;
             border-radius: 5px;
             border: 1px solid #0174BE;
         }
-
         input[type="text"]:focus {
             border-color: #FF5733;
             outline: none;
             background-color: #f9f9f9;
         }
-
         input[type="submit"] {
             background-color: #0174BE;
             color: white;
@@ -163,97 +140,152 @@
             border-radius: 5px;
             cursor: pointer;
         }
-
         input[type="submit"]:hover {
             background-color: #005a94;
         }
-
         input[type="submit"]:active {
             background-color: #003d66;
         }
-
         label {
             display: block;
             margin-bottom: 5px;
         }
     </style>
-
     <link rel="stylesheet" href="estilos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-	
-    <script type="text/javascript" src="script.js" defer></script>
+    <script>
+        let db;
+        const request = indexedDB.open("StreetBarDB", 1);
 
+        request.onupgradeneeded = function (event) {
+            db = event.target.result;
+            const objectStore = db.createObjectStore("usuarios", { keyPath: "id", autoIncrement: true });
+            objectStore.createIndex("nombre", "nombre", { unique: false });
+            objectStore.createIndex("correo", "correo", { unique: false });
+            objectStore.createIndex("telefono", "telefono", { unique: false });
+        };
+
+        request.onsuccess = function (event) {
+            db = event.target.result;
+            mostrarUsuarios();
+        };
+
+        request.onerror = function (event) {
+            console.error("Error al abrir la base de datos", event);
+        };
+
+        function validarFormulario() {
+            const nombre = document.getElementById("nom").value;
+            const correo = document.getElementById("co").value;
+            const telefono = document.getElementById("fon").value;
+
+            const transaction = db.transaction(["usuarios"], "readwrite");
+            const objectStore = transaction.objectStore("usuarios");
+            objectStore.add({ nombre, correo, telefono });
+
+            transaction.oncomplete = function () {
+                mostrarUsuarios();
+                document.getElementById("formularioContacto").reset();
+            };
+
+            transaction.onerror = function () {
+                alert("Error al guardar la información");
+            };
+
+            return false;
+        }
+
+        function mostrarUsuarios() {
+            const transaction = db.transaction(["usuarios"], "readonly");
+            const objectStore = transaction.objectStore("usuarios");
+            const request = objectStore.getAll();
+
+            request.onsuccess = function (event) {
+                const usuarios = event.target.result;
+                const tabla = document.getElementById("tablaUsuarios");
+                tabla.innerHTML = `<tr><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Acciones</th></tr>`;
+                usuarios.forEach(usuario => {
+                    tabla.innerHTML += `<tr>
+                        <td><input type="text" value="${usuario.nombre}" id="nombre-${usuario.id}"></td>
+                        <td><input type="text" value="${usuario.correo}" id="correo-${usuario.id}"></td>
+                        <td><input type="text" value="${usuario.telefono}" id="telefono-${usuario.id}"></td>
+                        <td>
+                            <button onclick="actualizarUsuario(${usuario.id})">Actualizar</button>
+                            <button onclick="eliminarUsuario(${usuario.id})">Eliminar</button>
+                        </td>
+                    </tr>`;
+                });
+            };
+        }
+
+        function actualizarUsuario(id) {
+            const nombre = document.getElementById(`nombre-${id}`).value;
+            const correo = document.getElementById(`correo-${id}`).value;
+            const telefono = document.getElementById(`telefono-${id}`).value;
+
+            const transaction = db.transaction(["usuarios"], "readwrite");
+            const objectStore = transaction.objectStore("usuarios");
+            objectStore.put({ id, nombre, correo, telefono });
+
+            transaction.oncomplete = function () {
+                mostrarUsuarios();
+            };
+        }
+
+        function eliminarUsuario(id) {
+            const transaction = db.transaction(["usuarios"], "readwrite");
+            const objectStore = transaction.objectStore("usuarios");
+            objectStore.delete(id);
+
+            transaction.oncomplete = function () {
+                mostrarUsuarios();
+            };
+        }
+    </script>
+	<script type="text/javascript" src="script.js" defer></script>
+	
 </head>
 <body style="font-size: 24px; padding: 20px;" onload="saludoInicial();">
-
 <noscript>
     <p style="color: red; font-weight: bold; text-align: center;">
         Tu navegador no soporta JavaScript o está desactivado. Algunas funciones no estarán disponibles.
     </p>
 </noscript>
-
 <div class="container">
     <h1 class="titulo-principal">StreetBarTeam</h1>
     <img class="imagen-perfil" src="chango.png" alt="Imagen de perfil"/>
     <p class="descripcion">¡Bienvenidos a esta página local para los interesados en la calistenia!</p>
     <p class="descripcion">Aquí podrás encontrar desde tutoriales y rutinas dependiendo de tu nivel, desde contenido para principiantes hasta entrenamientos avanzados.</p>
-
     <table>
         <caption>Tutoriales por Nivel</caption>
-        <tr>
-            <th>Principiantes</th>
-            <th>Experimentados</th>
-            <th>Avanzado</th>
-        </tr>
+        <tr><th>Principiantes</th><th>Experimentados</th><th>Avanzado</th></tr>
         <tr>
             <td><a href="principiantes.html" target="_blank">Tutoriales</a></td>
             <td><a href="intermedio.html" target="_blank">Tutoriales</a></td>
             <td><a href="avanzados.html" target="_blank">Tutoriales</a></td>
         </tr>
     </table>
-
     <h2 class="titulo-secundario">Redes sociales del equipo</h2>
     <a href="https://www.instagram.com/streetbarteam" target="_blank">
         <i class="fab fa-instagram"></i> Instagram
     </a>
     <br>
-
     <h2 class="titulo-secundario">Ubicación del equipo</h2>
     <div class="mapa-container">
-        <iframe 
-            class="mapa"
-            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1850.189324072158!2d-102.3414578!3d21.9584261!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8429ef567a1e3cf5%3A0x9924f50b9612de39!2sAcuarama!5e0!3m2!1ses-419!2smx!4v1743426915238!5m2!1ses-419!2smx"
-            allowfullscreen=""
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade">
-        </iframe>
+        <iframe class="mapa" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1850.189324072158!2d-102.3414578!3d21.9584261!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8429ef567a1e3cf5%3A0x9924f50b9612de39!2sAcuarama!5e0!3m2!1ses-419!2smx!4v1743426915238!5m2!1ses-419!2smx" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
+	
+    <form id="formularioContacto" onsubmit="return validarFormulario(event)">
 
-	 
-
-    <form id="formularioContacto" onsubmit="return validarFormulario();">
-        <div>
-            <label for="nom">Nombre:</label>
-            <input type="text" id="nom" name="nom">
-        </div>
-        <div>
-            <label for="co">Correo:</label>
-            <input type="text" id="co" name="co">
-        </div>
-        <div>
-            <label for="fon">Teléfono:</label>
-            <input type="text" id="fon" name="fon">
-        </div>
+        <div><label for="nom">Nombre:</label><input type="text" id="nom" name="nom"></div>
+        <div><label for="co">Correo:</label><input type="text" id="co" name="co"></div>
+        <div><label for="fon">Teléfono:</label><input type="text" id="fon" name="fon"></div>
         <input type="submit" value="Enviar">
     </form>
+	<div id="resultadoExtra" style="margin-top: 20px; font-weight: bold;"></div>
 
-    <div id="resultadoExtra" style="margin-top: 20px; font-size: 18px; color: yellow;"></div>
-	<button onclick="realizarCalculos();">Realizar Cálculos Complejos</button>
-<div id="resultadosCalculos" style="margin-top: 20px; font-size: 18px; color: #fff;"></div>
-
-	<button onclick="verificarEdad();">Verificar Edad</button>
+    <h2 class="titulo-secundario">Usuarios Registrados</h2>
+    <table id="tablaUsuarios"></table>
 </div>
-	
-	
 </body>
 </html>
